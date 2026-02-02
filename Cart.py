@@ -1,18 +1,33 @@
 class Cart:
     def __init__(self):
         self.items=[]
-    def add_item(self,item,quantity=1):
+    def add_item(self, item, quantity=1):
+        MAX_QUANTITY = 10
+
         for i in range(len(self.items)):
-            if self.items[i][0]== item:
-                self.items[i]=(item,self.items[i][1] +quantity)
+            if self.items[i][0] == item:
+                current_quantity = self.items[i][1]
+                if current_quantity >= MAX_QUANTITY:
+                    #if the current quantity is already 10 or more it exits early
+                    #prevents adding more than the allowed limit
+                    return  
+                new_quantity = min(current_quantity + quantity, MAX_QUANTITY)
+                self.items[i] = (item, new_quantity)
                 return
-        self.items.append((item,quantity))
+
+        #if item is not already in cart
+        quantity = min(quantity, MAX_QUANTITY)
+        #this line runs only if the item was not already in the cart (the loop didn't return)
+        self.items.append((item, quantity))
 
 
+        
+
+       # removes items
     def remove_item(self,item):
-        self.items=[entry for entry in self.items if entry[0] != item] 
+        self.items=[product for product in self.items if product[0] != item] 
 
-
+       # updates the list when we add products also checks if the product all exists then if yes add the quantity
     def update_quantity(self,item,quantity):
         for i in range(len(self.items)):
             if self.items[i][0]== item:
@@ -31,22 +46,22 @@ class Cart:
 
 
 
-
+# to make it simple we add a fixed price by ourselves
     def get_price(self, item):
         
         prices = {
-            "apple": 3,
+            "apple": 8,
             "banana": 2,
             "orange": 4
         }
         return prices.get(item, 0)    
             
 
-
+# this makes the cart empty by removing all the items
 
     def clear(self):
         self.items = []
-
+# tells us when zhe cart is empty
     def is_empty(self):
         return len(self.items) == 0
 
